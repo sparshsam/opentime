@@ -1,0 +1,11 @@
+{
+  "forgeVersion": "0.2.2",
+  "generatedAt": "2026-08-03T01:34:23Z",
+  "profile": "desktop",
+  "features": {"api": false,"auth": false,"mcp": false,"database": false},
+  "standardsPath": "/home/spars/repos/kovina/standards",
+  "canonicalTemplatesUsed": ["README.template.md","CHANGELOG.template.md","CONTRIBUTING.template.md","SECURITY.template.md","ISSUE_TEMPLATE.md","ISSUE_TEMPLATE.feature.md","PULL_REQUEST_TEMPLATE.md","release-notes.template.md","LICENSE_HEADER.template"],
+  "missingCanonicalTemplates": [],
+  "overwrittenFiles": [],
+  "auditStatus": "pending"
+}

@@ -1,0 +1,32 @@
+{
+  "projectName": "OpenTime",
+  "displayName": "OpenTime",
+  "repoSlug": "opentime",
+  "description": "Calm, privacy-first desktop time companion. Clocks, world clocks, and more.",
+  "author": "Kovina",
+  "category": "Utilities",
+  "primaryPlatform": "desktop",
+  "appType": "Desktop App",
+  "profile": "desktop",
+  "licenseType": "AGPL-3.0",
+  "currentVersion": "0.1.0",
+  "appStatus": "experimental",
+  "ecosystem": "Kovina",
+  "privacy": "local-first",
+  "designTokens": "assets/design-tokens.css",
+  "brandNotes": "BRAND_NOTES.md",
+  "platforms": {
+    "desktop": true,
+    "web": false,
+    "mobile": false
+  },
+  "features": {
+    "api": false,
+    "auth": false,
+    "mcp": false,
+    "database": false
+  },
+  "generatedBy": "OpenForge",
+  "openForgeVersion": "0.3.0",
+  "kovinaStandardsVersion": "1.2.0"
+}

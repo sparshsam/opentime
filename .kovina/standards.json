@@ -1,0 +1,30 @@
+{
+  "manifestVersion": "1.2.0",
+  "standardsVersion": "1.2.0",
+  "standardsSource": ".kovina/standards.json",
+  "generatedAt": "2026-08-03T01:34:23Z",
+  "profile": "desktop",
+  "standards": {
+    "manifesto": { "version": "1.0.0", "status": "reference", "category": "foundational" },
+    "brand": { "version": "1.0.0", "status": "reference", "category": "foundational" },
+    "design": { "version": "1.0.0", "status": "reference", "category": "foundational" },
+    "architecture": { "version": "1.0.0", "status": "generated", "category": "foundational" },
+    "appIcon": { "version": "1.0.0", "status": "generated", "category": "shared" },
+    "accessibility": { "version": "1.0.0", "status": "generated", "category": "shared" },
+    "storeListing": { "version": "1.0.0", "status": "generated", "category": "shared" },
+    "localization": { "version": "1.0.0", "status": "generated", "category": "shared" },
+    "navigation": { "version": "1.0.0", "status": "generated", "category": "shared" },
+    "dataStorage": { "version": "1.0.0", "status": "generated", "category": "shared" },
+    "securityPrivacy": { "version": "1.0.0", "status": "generated", "category": "shared" },
+    "performance": { "version": "1.0.0", "status": "generated", "category": "shared" },
+    "projectStructure": { "version": "1.0.0", "status": "generated", "category": "process" },
+    "documentation": { "version": "1.0.0", "status": "generated", "category": "process" },
+    "release": { "version": "1.0.0", "status": "generated", "category": "process" },
+    "testing": { "version": "1.0.0", "status": "pending", "category": "process" },
+    "mcp": { "version": "1.0.0", "status": "generated", "category": "protocols" },
+    "openForge": { "version": "1.0.0", "status": "pending", "category": "protocols" },
+    "openAudit": { "version": "1.0.0", "status": "pending", "category": "protocols" },
+    "windows": { "version": "1.0.0", "status": "generated", "category": "platforms" },
+    "mac": { "version": "1.0.0", "status": "generated", "category": "platforms" }
+  }
+}

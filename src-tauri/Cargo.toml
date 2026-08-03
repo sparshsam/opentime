@@ -1,0 +1,45 @@
+[package]
+name = "opentime"
+version = "0.1.0"
+description = "Calm, privacy-first desktop time companion. Clocks, world clocks, and more."
+authors = ["Kovina"]
+edition = "2021"
+rust-version = "1.77.2"
+license = "AGPL-3.0"
+
+# The library (lib.rs) holds the whole app so it can be tested without a GUI
+# main; the binary is a thin wrapper.
+[lib]
+name = "opentime_lib"
+crate-type = ["lib", "cdylib", "staticlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["tray-icon", "image-png"] }
+tauri-plugin-opener = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+uuid = { version = "1", features = ["v4"] }
+rusqlite = { version = "0.31", features = ["bundled"] }
+chrono = { version = "0.4", features = ["serde"] }
+chrono-tz = { version = "0.9" }
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.59", features = [
+  "Win32_Foundation",
+  "Win32_UI_WindowsAndMessaging",
+  "Win32_UI_HiDpi",
+  "Win32_UI_Shell",
+  "Win32_System_LibraryLoader",
+  "Win32_System_Threading",
+  "Win32_Graphics_Gdi",
+  "Win32_Security",
+] }
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "s"
+strip = true

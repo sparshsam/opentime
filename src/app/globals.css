@@ -1,0 +1,85 @@
+/*!
+ * OpenTime global styles.
+ *
+ * The widget surface is transparent; only its content draws. The manager is a
+ * conventional Kovina-editorial surface. Base styles here are intentionally
+ * minimal — the Kovina design system drives the manager (see assets/design-tokens.css).
+ */
+
+/* Bundled, OFL-licensed fonts — see src/assets/fonts/THIRD_PARTY_NOTICES.md */
+@import "../assets/fonts/font-faces.css";
+
+:root {
+  color-scheme: dark light;
+
+  /* Kovina neutral palette */
+  --ot-black: #111111;
+  --ot-gray: #555555;
+  --ot-white: #ffffff;
+  --ot-dark: #111111;
+  --ot-accent: #7a004b;
+
+  /* Manager surface */
+  --ot-bg: #0e0e0e;
+  --ot-surface: #161616;
+  --ot-elevated: #1e1e1e;
+  --ot-border: #2a2a2a;
+  --ot-text: #e5e5e5;
+  --ot-text-secondary: #a3a3a3;
+  --ot-text-tertiary: #6a6a6a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  font-family:
+    Inter,
+    "Segoe UI",
+    system-ui,
+    -apple-system,
+    sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Widget surfaces are transparent; content paints itself. */
+body.ot-widget {
+  background: transparent;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* Manager surface */
+body.ot-manager {
+  background: var(--ot-bg);
+  color: var(--ot-text);
+  overflow: hidden;
+}
+
+/* Focus visibility for keyboard users */
+:focus-visible {
+  outline: 2px solid var(--ot-accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
