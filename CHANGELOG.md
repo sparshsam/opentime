@@ -2,6 +2,43 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] — 2026-08-03
+
+### Added
+
+- **Multiple independent clocks** — create any number of clock widgets, each
+  with its own timezone, design, appearance, hour cycle, seconds/date settings,
+  display placement, size, lock, and visibility.
+- **Searchable offline timezone picker** — city, country, IANA id, and alias
+  search; shows abbreviation, UTC offset, and a live local-time preview; fully
+  keyboard navigable.
+- **Custom labels** — replace generated location labels with your own
+  ("Home", "London Office", "New York Market").
+- **World Clock Panel design** — grouped multi-timezone rows with custom
+  ordering (drag or up/down), date/offset/abbreviation toggles, and a clear,
+  accessible day-change indicator (+1 / −1).
+- **IANA-only persistence** — timezone identities are always IANA ids; never a
+  bare UTC offset.
+- **Timezone correctness** — verified DST spring/fall transitions, zones
+  without DST, half-hour (+5:30) and quarter-hour (+5:45, +12:45) offsets,
+  midnight day changes, and leap years.
+- **Performance safeguard** — the manager warns when many clocks are updating
+  every second.
+- **Coordinated time source** — one shared scheduler per window; clocks without
+  seconds idle at one wake per minute.
+
+### Changed
+
+- Timezone picker previews respect each widget's hour cycle.
+- Design switching in the gallery preserves compatible settings and safely
+  resets incompatible ones.
+
+### Fixed
+
+- None (incremental capability release).
+
+---
+
 ## [0.2.0] — 2026-08-03
 
 ### Added

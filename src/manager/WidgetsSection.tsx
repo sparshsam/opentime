@@ -70,6 +70,9 @@ export function WidgetsSection({
     onChange();
   };
 
+  const activeSeconds = widgets.filter((w) => w.showSeconds).length;
+  const manyLiveClocks = activeSeconds >= 8;
+
   return (
     <section>
       <div
@@ -84,6 +87,24 @@ export function WidgetsSection({
           + {t("widgets.add")}
         </button>
       </div>
+
+      {manyLiveClocks && (
+        <div
+          role="note"
+          style={{
+            marginTop: 16,
+            fontSize: 12,
+            color: "#f0b400",
+            background: "rgba(240,180,0,0.08)",
+            border: "1px solid rgba(240,180,0,0.25)",
+            borderRadius: 8,
+            padding: "8px 12px",
+          }}
+        >
+          {activeSeconds} clocks are updating every second. For best all-day
+          performance, consider turning off seconds on some clocks.
+        </div>
+      )}
 
       {widgets.length === 0 ? (
         <p style={{ color: "var(--ot-text-secondary)", marginTop: 24 }}>

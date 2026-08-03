@@ -23,10 +23,9 @@ account, no telemetry, no cloud dependency, no network requests for core
 functionality. Widgets survive restarts, Explorer crashes, sign-out, and
 mixed-DPI display layouts.
 
-**Current release: v0.2.0** — the desktop-clock foundation plus the full clock
-gallery: 7 digital designs, 6 analog designs, the world-clock panel, a
-configuration-driven appearance system, curated typography, and bundled
-fonts.
+**Current release: v0.3.0** — the gallery plus full multi-clock world-clock
+support: unlimited independent clocks, a searchable offline IANA timezone
+picker, custom labels, and a World Clock Panel with day-change indicators.
 
 > **Roadmap only** — calendars, alarms, timers, and reminders are planned but
 > not yet implemented. See [docs/ROADMAP.md](docs/ROADMAP.md).
@@ -38,6 +37,10 @@ fonts.
 | Feature | Description |
 |---|---|
 | Desktop clock widgets | Borderless, transparent clocks on the desktop layer — above the wallpaper, below app windows, never in the taskbar or Alt+Tab |
+| World clocks | Unlimited independent clocks, each with its own timezone, design, appearance, and placement |
+| Timezone picker | Offline search by city, country, IANA id, or alias; live local-time preview, abbreviation, and offset |
+| World Clock Panel | Grouped multi-timezone panel with custom ordering and clear day-change indicators |
+| IANA timezone IDs | Persisted zones — never bare offsets; DST, half/quarter-hour, and leap-year correct |
 | Clock gallery | 7 digital + 6 analog designs + world-clock panel, with live previews and capability badges |
 | Appearance system | Configuration-driven design registry with presets, contrast validation, and per-widget token editing |
 | Curated typography | 7 font styles + Arabic/Roman/markers numerals; all bundled fonts OFL-licensed |
@@ -123,6 +126,12 @@ OpenTime is local-first and privacy-first:
 ---
 
 ## Version Journey
+
+### [v0.3.0](CHANGELOG.md) — 2026-08-03
+
+Full multi-clock world-clock support: unlimited independent clocks, a
+searchable offline IANA timezone picker, custom labels, and the World Clock
+Panel with day-change indicators.
 
 ### [v0.2.0](CHANGELOG.md) — 2026-08-03
 

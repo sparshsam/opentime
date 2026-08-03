@@ -1,6 +1,6 @@
 {
   "name": "opentime",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "description": "Calm, privacy-first desktop time companion. Clocks, world clocks, and more.",
   "license": "AGPL-3.0",
@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2.0.0",
+    "@testing-library/react": "^16.3.2",
     "@types/luxon": "^3.7.3",
     "@types/node": "^26.1.2",
     "@types/react": "^18.3.3",
