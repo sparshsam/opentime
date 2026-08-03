@@ -1,80 +1,69 @@
 # Security & Privacy Architecture
 
-> Generated from [SECURITY_PRIVACY_STANDARD](https://github.com/sparshsam/kovina/blob/main/standards/shared/SECURITY_PRIVACY_STANDARD.md)
-> **Project:** OpenTime
+> OpenTime's security posture. Because OpenTime is local-first and makes no
+> network requests, most of the standard web-app threat surface does not apply.
 
----
+## Core commitments
 
-## Core Commitments
-
-1. **No telemetry by default** — All analytics and usage tracking are opt-in
-2. **No ads** — The application displays no advertising
-3. **No dark patterns** — No confirmshaming, roach motels, preselected opt-ins, or forced actions
-4. **Data minimization** — Collect only what is directly necessary for stated features
-5. **Safe defaults** — Every security-sensitive decision defaults to the safest option
+1. **No telemetry** — no usage tracking, no crash reporting, no analytics.
+2. **No ads.**
+3. **No dark patterns** — no confirmshaming, no preselected opt-ins.
+4. **Data minimization** — only what the stated features need (widgets +
+   settings), stored locally.
+5. **Safe defaults** — privacy and security settings default to the safest
+   option.
 
 ## Permissions
 
-Request permissions at point of use with a clear explanation of why they are needed:
+OpenTime requests **no** OS permissions at runtime:
 
-| Permission | When to Request | Rationale |
-|---|---|---|
-| Camera | When user opens camera feature | Not on launch |
-| Microphone | When user starts recording | Not on launch |
-| Location | When user enables a location feature | Per-session, not persistent |
-| Notifications | After user has seen value | Not on first launch |
-
-## Secrets Management
-
-| Secret Type | Storage Location |
+| Permission | Status |
 |---|---|
-| Authentication tokens | Platform credential store (Keychain, Keystore) |
-| API keys | Environment variables (server) or public + server-side guard (client) |
-| Database credentials | Server-side environment variables only |
-| Encryption keys | Platform secure enclave |
+| Camera | Not used |
+| Microphone | Not used |
+| Location | Not used |
+| Notifications | Not used |
+| Network | None for core functionality |
 
-## Environment Variables
+The webview may request network for page resources (bundled assets only); the
+application makes no API calls.
 
-Document all required environment variables in `.env.example` (placeholder values only). Never commit real secrets.
+## Attack surface
 
-## Privacy Policy
+Because there is no server, no account, and no cloud, the attack surface is the
+local application:
 
-Include a privacy policy that states:
-- Exactly what data is collected and why
-- How long each data type is retained
-- Which third-party services receive data
-- How users can request data deletion
-- How users can export their data
+- **No remote code paths** — no fetch to remote endpoints for core features.
+- **No third-party SDKs** — no analytics SDKs, no ad SDKs.
+- **SQL injection** — all SQL uses prepared statements with bound parameters
+  (`rusqlite` params); no string interpolation of user input into SQL.
+- **Command surface** — a narrow, whitelisted set of Tauri commands. Every
+  command validates its inputs (IANA timezone ids, design ids, dimension
+  ranges) before touching the database.
+- **No arbitrary shell execution** — no `Command::new` in the codebase.
+- **Webview hardening** — a strict Content-Security-Policy is set in
+  `tauri.conf.json` (default-src 'self', no remote origins, no inline script).
+- **Least privilege** — the app only reads/writes its own app-data directory.
 
-## Logging Rules
+## Data storage
 
-- Logs never contain secrets, passwords, tokens, or PII
-- Logs are stored on-device by default
-- Server logs have documented retention (30–90 days maximum)
-- Crash reports are opt-in and contain no user data
+- All data in one SQLite database in the app-data directory.
+- No secrets, tokens, or credentials are ever stored.
+- Logging is minimal and contains no PII.
 
-## Authentication
+## Privacy policy
 
-- Authentication is always optional for local-only features
-- OAuth 2.0 / OIDC preferred over password-based auth
-- Session tokens survive app restart
-- MFA supported where provider allows
+See [PRIVACY.md](../PRIVACY.md) for the user-facing policy.
 
-## Manual Tasks
+## Manual tasks
 
-- [ ] Implement permission request dialogs with platform API calls
-- [ ] Integrate authentication flow (OAuth, sign-in button)
-- [ ] Set up credential store integration (Keychain / Keystore)
-- [ ] Write privacy policy content
-- [ ] Add telemetry opt-in/opt-out toggle in settings
-- [ ] Implement safe defaults (all tracking off)
-- [ ] Add rate limiting to API endpoints (if applicable)
-- [ ] Audit dependencies for vulnerabilities
+- [x] Write privacy policy content
+- [x] Set CSP in tauri.conf.json
+- [x] Confirm no telemetry/ads/dark patterns in UI
+- [ ] Audit dependencies for vulnerabilities before public release
 - [ ] Set up automated dependency scanning in CI
-- [ ] Test account deletion flow (self-service)
-- [ ] Verify crash reports contain no PII
-- [ ] Review that no dark patterns exist in the UI
+- [ ] Validate the built MSIX requests only expected capabilities
 
 ---
 
-*See [SECURITY_PRIVACY_STANDARD](https://github.com/sparshsam/kovina/blob/main/standards/shared/SECURITY_PRIVACY_STANDARD.md) for full requirements.*
+*See [SECURITY_PRIVACY_STANDARD](https://github.com/sparshsam/kovina/blob/main/standards/shared/SECURITY_PRIVACY_STANDARD.md) for the underlying standard.*

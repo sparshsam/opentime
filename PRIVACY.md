@@ -1,82 +1,61 @@
 # Privacy Policy
 
 > **Last updated:** 2026-08-03
-> **Applies to:** OpenTime (0.1.0)
+> **Applies to:** OpenTime (0.3.0)
 
 ---
 
 ## Privacy Philosophy
 
-This application is forged as part of the [Kovina](https://kovina.org) ecosystem, where
-privacy is a foundational principle, not an afterthought.
+OpenTime is part of the [Kovina](https://kovina.org) ecosystem, where privacy
+is a foundational principle. OpenTime is a **local-first** application: it
+makes no network requests for core functionality, collects no telemetry, and
+requires no account.
 
-**This application does not collect, store, or transmit personal information unless
-explicitly configured to do so by the user.**
+## What OpenTime Does Not Do
 
-Our approach is simple:
+- **No telemetry.** The app never phones home. No usage statistics, crash
+  reports, or analytics are sent anywhere.
+- **No accounts.** OpenTime works fully without signing in. There is no
+  authentication.
+- **No ads.** There are no advertisements.
+- **No cloud dependency.** Your clocks and settings live only on your device.
+- **No unnecessary network access.** The only network-related code path is the
+  webview itself; OpenTime makes no network requests for its core features.
 
-- **No telemetry** — The app does not phone home. No usage statistics, crash reports, or
-  analytics are sent anywhere without your explicit consent.
-- **No accounts required** — OpenTime functions fully without creating an account or
-  signing in. Authentication is always opt-in and feature-specific.
-- **Local-first by default** — All data processing happens on your device. Your files,
-  content, and data stay where they belong: with you.
+## Data Storage
 
----
+All data is stored locally on your device in a single SQLite database:
 
-## Data Collection
+```
+%APPDATA%\org.kovina.opentime\opentime.sqlite   (Windows)
+```
 
-### None by Default
+This database contains only:
 
-OpenTime does not collect, store, or transmit any personal information during normal
-operation.
+- Your clock widgets (timezone, design, label, position, appearance)
+- Application settings (hour cycle, startup preference, manager window size)
 
-<!-- TODO: Describe any optional data collection features -->
-
-### Information You Explicitly Provide
-
-If OpenTime offers optional features that involve data sharing (such as cloud sync,
-collaboration, or publishing), those features will:
-
-1. Be clearly labeled as optional
-2. Require your explicit action to enable
-3. Only transmit data you specifically choose to share
-4. Disclose exactly what data is sent and where
-
----
+Nothing in this data is transmitted anywhere.
 
 ## Third-Party Services
 
-OpenTime may rely on the following third-party services for optional functionality:
-
-<!-- TODO: List third-party services if applicable -->
-
-| Service | Purpose | Data Shared | Opt-in Required |
-|---------|---------|-------------|-----------------|
-|         |         |             |                 |
-
-Each integration is optional and clearly communicated at the point of use.
-
----
+None. OpenTime does not integrate with any third-party service. Bundled fonts
+are licensed under the SIL Open Font License and ship with the app — they are
+never downloaded at runtime.
 
 ## Data Security
 
-<!-- TODO: Describe data security measures -->
-
-- Encryption at rest (if applicable)
-- Encryption in transit (if applicable)
-- Local data storage practices
-
----
+- Data is stored locally in WAL-mode SQLite.
+- No data is ever sent over a network by OpenTime itself.
+- The app does not request unnecessary filesystem or system permissions.
 
 ## Your Rights
 
 - **You own your data.** Full stop.
-- **You can delete your data** at any time.
-- **No data is sold, traded, or shared** with third parties for advertising or
-  any other purpose.
-
----
+- **You can delete your data** at any time by deleting the database file
+  (this resets OpenTime to first run).
+- **No data is sold, traded, or shared** with any party for any purpose.
 
 ## Changes to This Policy
 
@@ -84,13 +63,7 @@ If this privacy policy changes, the version number and date at the top of this
 document will be updated. Significant changes may be communicated through
 release notes.
 
----
-
 ## Contact
-
-For privacy-related questions or concerns:
-
-<!-- TODO: Add contact information -->
 
 - **Project:** OpenTime
 - **Author/Maintainer:** Kovina

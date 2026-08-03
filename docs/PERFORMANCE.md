@@ -1,91 +1,75 @@
 # Performance Architecture
 
-> Generated from [PERFORMANCE_STANDARD](https://github.com/sparshsam/kovina/blob/main/standards/shared/PERFORMANCE_STANDARD.md)
-> **Project:** OpenTime
+> OpenTime is designed to run all day on the desktop. This document describes
+> how it stays idle-cheap and how it should be measured.
 
----
+## Design for low idle cost
 
-## Performance Budgets
+The dominant cost driver is clock rendering frequency. OpenTime is engineered
+around a **coordinated time source**:
 
-### Desktop (Windows / macOS)
+- One `TimeScheduler` per window advances a single `now` value.
+- Clocks **without seconds** tick once per minute, aligned to the minute
+  boundary.
+- Clocks **with seconds** tick once per second.
+- No timer exists per clock — the scheduler is the only timer, and every clock
+  renders from the same instant, so there is no cross-widget drift.
+
+This means an idle OpenTime with seconds-disabled clocks performs one React
+re-render per minute per window, regardless of how many clocks a window shows.
+
+## What consumes CPU when it should not
+
+- **Seconds** — every second-updating clock wakes its window every second.
+  The manager warns when 8+ such clocks exist.
+- **Animations** — the Flip design animates digit changes; this is gated by
+  `prefers-reduced-motion`.
+- **Hidden widgets** — hidden widget windows do not render (the window is
+  hidden); the scheduler in a hidden window still ticks, but at the minimum
+  rate.
+
+## Rendering
+
+- Digital clocks render a small, static DOM tree; only the time text changes
+  per tick. React reconciliation is cheap because the tree is tiny.
+- Analog clocks render one SVG; hand angles are recomputed from the shared
+  `now`. No animation loop — hands only move when `now` changes.
+- The world-clock panel renders N rows; N is typically small (< 20).
+
+## Fonts
+
+- Fonts are bundled (no runtime download) and use `font-display: swap`.
+- Variable fonts cover many weights in one file.
+
+## Measurement plan
+
+Measure on a mid-range Windows machine, in a **release** build:
+
+| Scenario | What to record |
+|---|---|
+| Idle CPU, 1 clock, seconds off | % CPU over 10 minutes |
+| Idle CPU, 10 clocks, seconds off | % CPU over 10 minutes |
+| Idle CPU, 10 clocks, seconds on | % CPU over 10 minutes |
+| Memory, 1 clock | working set after 30 min |
+| Memory, 10 clocks | working set after 30 min |
+| Sleep → resume | time for clocks to correct |
+| Extended run | memory growth over 24 h |
+| Seconds + animations enabled | CPU with several Flip clocks |
+| Add/remove widgets 50× | no window/thread leaks (check task manager) |
+
+Record results in `docs/qa/windows-manual-validation.md` as part of the manual
+validation checklist.
+
+## Budgets
 
 | Metric | Target |
 |---|---|
-| Cold start to interactive | ≤ 2 seconds |
-| Warm start to interactive | ≤ 0.5 seconds |
-| Memory (typical working set) | ≤ 200 MB |
-| Frame rate | 60 fps minimum |
-
-## Startup Budgets
-
-| Scenario | Target |
-|---|---|
-| Cold start (first launch) | ≤ 2 seconds |
-| Warm start (subsequent) | ≤ 0.5 seconds |
-
-## Interaction Latency
-
-| Interaction | Target |
-|---|---|
-| Tap / click feedback | < 100ms |
-| Navigation transition | < 300ms |
-| Data load (local) | < 100ms |
-| Data load (synced) | < 300ms first paint |
-
-## Bundle Size
-
-| Asset | Budget |
-|---|---|
-| Initial JavaScript | ≤ 10 MB (distribution size) |
-| Route chunks | Code-split per route |
-| Font files | Subsetted, `font-display: swap` |
-
-## Optimization Checklist
-
-### Images
-- [ ] Serve at display dimensions — never larger
-- [ ] Use modern formats (WebP, AVIF)
-- [ ] Lazy-load below-the-fold images
-- [ ] Specify dimensions in markup to prevent layout shift
-
-### Fonts
-- [ ] Preload fonts in document `<head>`
-- [ ] Use `font-display: swap` to prevent invisible text (FOIT)
-- [ ] Subset fonts to remove unused glyphs
-
-### Code
-- [ ] Routes are code-split (each route loads independently)
-- [ ] Heavy libraries are lazy-loaded
-- [ ] Lists beyond 100 items use virtualization
-- [ ] Animations use GPU-composited properties only (transform, opacity)
-
-### Caching
-- [ ] Cache API responses with appropriate TTL
-- [ ] Cache is separate from user data storage
-- [ ] App shell is cached for offline startup
-- [ ] Previously viewed content is available offline
-
-## Profiling Checklist
-
-- [ ] Profile on a mid-range device (not developer machine)
-- [ ] Profile in release mode (not debug)
-- [ ] Measure cold and warm startup
-- [ ] Check frame rate during scroll and navigation
-- [ ] Verify memory stability over 30 minutes of usage
-- [ ] Check bundle size before every release
-- [ ] Add Web Vitals monitoring (web)
-- [ ] CI runs performance regression checks
-
-## Manual Tasks
-
-- [ ] Implement code splitting per route
-- [ ] Set up image optimization pipeline
-- [ ] Configure font loading strategy (preload, subset, swap)
-- [ ] Add virtualized list component for long lists
-- [ ] Set up performance regression CI checks
-- [ ] Test on low-end device (≤ 3 GB RAM mobile, ≤ 8 GB RAM desktop)
-- [ ] Document performance budgets in `docs/PERFORMANCE_BUDGETS.md`
+| Idle CPU (seconds off) | < 0.5% per window |
+| Memory (1 clock) | < 100 MB working set |
+| Memory (10 clocks) | < 250 MB working set |
+| Startup to tray-ready | < 2 s |
+| Bundle (JS) | < 500 KB gzipped |
 
 ---
 
-*See [PERFORMANCE_STANDARD](https://github.com/sparshsam/kovina/blob/main/standards/shared/PERFORMANCE_STANDARD.md) for full requirements.*
+*See [PERFORMANCE_STANDARD](https://github.com/sparshsam/kovina/blob/main/standards/shared/PERFORMANCE_STANDARD.md) for the underlying standard.*
