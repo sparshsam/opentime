@@ -6,13 +6,14 @@
  * and the gallery.
  */
 
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { AppSettings, MonitorInfo, WidgetRecord } from "@/shared/types";
 import { api } from "@/persistence/api";
 import { invoke } from "@tauri-apps/api/core";
 import { WidgetsSection } from "./WidgetsSection";
 import { StartupSection } from "./StartupSection";
 import { GeneralSection } from "./GeneralSection";
+import { AppearanceEditor } from "./AppearanceEditor";
 import { GallerySection } from "./GallerySection";
 import { Onboarding } from "./Onboarding";
 import { t } from "@/localization";
@@ -159,7 +160,12 @@ export function Manager() {
           <GallerySection widgets={widgets} onChange={refresh} />
         )}
         {section === "appearance" && (
-          <AppearanceSection settings={settings} onChange={updateSettings} />
+          <AppearanceSection
+            settings={settings}
+            widgets={widgets}
+            onChange={updateSettings}
+            onRefresh={refresh}
+          />
         )}
         {section === "startup" && (
           <StartupSection settings={settings} onChange={updateSettings} />
@@ -172,18 +178,91 @@ export function Manager() {
   );
 }
 
-// ── Appearance section (minimal for v0.1; full token editor lands in v0.2) ──
+// ── Appearance section — default settings + per-widget token editor ──
 
 function AppearanceSection({
   settings,
+  widgets,
   onChange,
+  onRefresh,
 }: {
   settings: AppSettings;
+  widgets: WidgetRecord[];
   onChange: (patch: Partial<AppSettings>) => void;
+  onRefresh: () => void;
 }) {
+  const [selectedId, setSelectedId] = useState<string | null>(
+    widgets[0]?.id ?? null,
+  );
+  const selected =
+    widgets.find((w) => w.id === selectedId) ?? widgets[0] ?? null;
+  const [saving, setSaving] = useState(false);
+
+  const saveAppearance = async (appearance: WidgetRecord["appearance"]) => {
+    if (!selected) return;
+    setSaving(true);
+    try {
+      await api.updateWidget({ id: selected.id, patch: { appearance } });
+      onRefresh();
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
     <section>
       <h2 style={{ marginTop: 0 }}>{t("appearance.title")}</h2>
+
+      <label style={{ display: "block", marginBottom: 16 }}>
+        Widget
+        <select
+          value={selected?.id ?? ""}
+          onChange={(e) => setSelectedId(e.target.value)}
+          style={fieldStyle}
+        >
+          {widgets.map((w) => (
+            <option key={w.id} value={w.id}>
+              {w.label || w.timezoneId}
+            </option>
+          ))}
+        </select>
+      </label>
+
+      {selected ? (
+        <>
+          <AppearanceEditor
+            appearance={selected.appearance}
+            designId={selected.designId}
+            onChange={saveAppearance}
+          />
+          {saving && (
+            <div
+              style={{
+                fontSize: 12,
+                color: "var(--ot-text-tertiary)",
+                marginTop: 8,
+              }}
+            >
+              Saving…
+            </div>
+          )}
+        </>
+      ) : (
+        <p style={{ color: "var(--ot-text-secondary)" }}>
+          Add a clock to edit its appearance.
+        </p>
+      )}
+
+      <hr
+        style={{
+          border: "none",
+          borderTop: "1px solid var(--ot-border)",
+          margin: "24px 0",
+        }}
+      />
+
+      <h3 style={{ marginTop: 0, fontSize: 15 }}>Defaults</h3>
+
       <label style={{ display: "block", marginBottom: 12 }}>
         {t("appearance.defaultHourCycle")}
         <select

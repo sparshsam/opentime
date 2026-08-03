@@ -376,6 +376,9 @@ function FlipTime({
   appearance: AppearanceConfig;
 }) {
   // Split-flap presentation: render each character in a "flap" cell.
+  // A subtle flip animation plays when a digit changes, but only when the OS
+  // has not requested reduced motion (prefers-reduced-motion). The animation
+  // itself is defined in globals.css and keyed off that media query.
   const chars = time.split("");
   return (
     <div
@@ -387,7 +390,8 @@ function FlipTime({
     >
       {chars.map((c, i) => (
         <span
-          key={i}
+          key={`${i}-${c}`}
+          className="ot-flap-cell"
           style={{
             background:
               a.backgroundColor === "transparent"

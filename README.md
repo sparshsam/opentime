@@ -23,9 +23,10 @@ account, no telemetry, no cloud dependency, no network requests for core
 functionality. Widgets survive restarts, Explorer crashes, sign-out, and
 mixed-DPI display layouts.
 
-**Current release: v0.1.0** — a reliable desktop-clock foundation with a
-Minimal Digital clock, a system tray, Windows sign-in startup, and full
-position/state persistence.
+**Current release: v0.2.0** — the desktop-clock foundation plus the full clock
+gallery: 7 digital designs, 6 analog designs, the world-clock panel, a
+configuration-driven appearance system, curated typography, and bundled
+fonts.
 
 > **Roadmap only** — calendars, alarms, timers, and reminders are planned but
 > not yet implemented. See [docs/ROADMAP.md](docs/ROADMAP.md).
@@ -37,6 +38,9 @@ position/state persistence.
 | Feature | Description |
 |---|---|
 | Desktop clock widgets | Borderless, transparent clocks on the desktop layer — above the wallpaper, below app windows, never in the taskbar or Alt+Tab |
+| Clock gallery | 7 digital + 6 analog designs + world-clock panel, with live previews and capability badges |
+| Appearance system | Configuration-driven design registry with presets, contrast validation, and per-widget token editing |
+| Curated typography | 7 font styles + Arabic/Roman/markers numerals; all bundled fonts OFL-licensed |
 | Minimal Digital design | Clean, legible 12/24-hour clock with optional seconds, date, and timezone label |
 | Move & lock | Drag to reposition; lock to prevent accidental moves; edge snapping and safe bounds |
 | Widget context menu | Settings, timezone, design, duplicate, lock/unlock, seconds/date toggles, display move, hide, remove |
@@ -119,6 +123,12 @@ OpenTime is local-first and privacy-first:
 ---
 
 ## Version Journey
+
+### [v0.2.0](CHANGELOG.md) — 2026-08-03
+
+The full clock gallery: 7 digital and 6 analog designs, the world-clock panel,
+a configuration-driven appearance system with presets and contrast validation,
+curated typography, and bundled OFL fonts.
 
 ### [v0.1.0](CHANGELOG.md) — 2026-08-03
 

@@ -74,6 +74,26 @@ body.ot-manager {
   outline-offset: 2px;
 }
 
+/* Split-flap flip animation — only when the OS permits motion. */
+@keyframes ot-flap {
+  0% {
+    transform: rotateX(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: rotateX(90deg);
+    opacity: 0.6;
+  }
+  100% {
+    transform: rotateX(0deg);
+    opacity: 1;
+  }
+}
+
+.ot-flap-cell {
+  animation: ot-flap 320ms ease-in-out;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

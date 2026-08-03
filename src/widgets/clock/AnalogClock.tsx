@@ -262,9 +262,10 @@ function markerLabels(design: AnalogDesignId, _a: AppearanceConfig): string[] {
   switch (design) {
     case "roman-analog":
       return ROMAN_NUMERALS;
-    case "numeral-free-analog":
+    // Modern: restrained markings, no numerals. Numeral-free: markers only.
     case "modern-analog":
-      return design === "modern-analog" ? ARABIC_NUMERALS.slice(0, 0) : [];
+    case "numeral-free-analog":
+      return [];
     case "railway-analog":
       return ARABIC_NUMERALS;
     case "classic-analog":

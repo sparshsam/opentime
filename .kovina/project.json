@@ -9,7 +9,7 @@
   "appType": "Desktop App",
   "profile": "desktop",
   "licenseType": "AGPL-3.0",
-  "currentVersion": "0.1.0",
+  "currentVersion": "0.2.0",
   "appStatus": "experimental",
   "ecosystem": "Kovina",
   "privacy": "local-first",

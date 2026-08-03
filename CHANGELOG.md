@@ -2,6 +2,46 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] — 2026-08-03
+
+### Added
+
+- **Clock Gallery** — browse digital, analog, and world-clock designs with live
+  current-time previews, capability badges, and appearance presets.
+- **7 digital designs** — Minimal Digital, Editorial, Classic LED, Flip,
+  Terminal, Soft Panel, Compact.
+- **6 analog designs** — Classic, Minimal, Roman, Railway, Modern,
+  Numeral-Free (SVG renderers with accessible text equivalents).
+- **Appearance system** — configuration-driven design registry; per-widget
+  token editor for colors, opacity, scale, corner radius, shadow, alignment,
+  spacing, typography, and numerals (from each design's supported fields).
+- **Appearance presets** — Light, Dark, Warm, Cool, Monochrome, High Contrast,
+  Transparent, Soft Glass, with contrast validation.
+- **Curated typography** — geometric sans, humanist sans, serif, monospace,
+  segmented, rounded, condensed; numerals (Arabic / Roman / markers-only).
+- **Bundled OFL fonts** — Inter, Source Sans 3, Source Serif 4, JetBrains Mono,
+  Nunito, Oswald, DSEG7 — with third-party notices; no runtime downloads.
+- **Flip animation** — subtle split-flap animation that respects
+  `prefers-reduced-motion`.
+- **Appearance persistence** — appearance JSON patches persisted via SQLite;
+  design switching preserves compatible settings and safely resets
+  incompatible ones.
+- **Accessibility** — keyboard access and focus states in the manager and
+  gallery, screen-reader labels, contrast warnings, reduced-motion support,
+  analog clocks expose an accessible text equivalent.
+
+### Changed
+
+- Appearance section in the manager now hosts the full per-widget token editor.
+- Design application preserves compatible settings and resets incompatible ones.
+
+### Fixed
+
+- `modern-analog` now renders restrained markings with no numerals.
+- Appearance JSON patches round-trip correctly through the persistence layer.
+
+---
+
 ## [0.1.0] — 2026-08-03
 
 ### Added

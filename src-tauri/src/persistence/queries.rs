@@ -260,6 +260,12 @@ pub fn update_widget(
                     params.push(Box::new(json));
                 }
             }
+            "appearance" => {
+                if let Ok(json) = serde_json::to_string(&value) {
+                    sql.push_str(", appearance = ?");
+                    params.push(Box::new(json));
+                }
+            }
             "logical_x" | "logical_y" | "logical_width" | "logical_height" | "scale"
             | "opacity" => {
                 if let Some(f) = value.as_f64() {
@@ -413,6 +419,35 @@ mod tests {
         assert_eq!(updated.scale, 1.5);
         // untouched fields preserved
         assert_eq!(updated.label, "Toronto");
+    }
+
+    #[test]
+    fn update_widget_appearance_patch() {
+        let db = test_db();
+        insert_widget(&db, &sample_widget("w1")).unwrap();
+        // The frontend always sends the FULL AppearanceConfig (AppearanceEditor
+        // spreads the previous config), so the stored column is complete.
+        let full = serde_json::json!({
+            "preset_id": "warm",
+            "primary_color": "#2b1a10",
+            "secondary_color": "#6b4a30",
+            "hand_color": null,
+            "marker_color": null,
+            "background_color": "#f7ead9",
+            "border_color": null,
+            "opacity": 0.85,
+            "corner_radius": 12,
+            "shadow_strength": 0.0,
+            "alignment": "center",
+            "spacing": 4,
+            "scale": 1.0,
+            "numeral_style": "arabic",
+            "font_style": "geometric-sans"
+        });
+        let updated = update_widget(&db, "w1", &serde_json::json!({ "appearance": full })).unwrap();
+        assert_eq!(updated.appearance.preset_id, "warm");
+        assert_eq!(updated.appearance.opacity, 0.85);
+        assert_eq!(updated.appearance.background_color.as_deref(), Some("#f7ead9"));
     }
 
     #[test]
