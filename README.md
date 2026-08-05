@@ -23,9 +23,11 @@ account, no telemetry, no cloud dependency, no network requests for core
 functionality. Widgets survive restarts, Explorer crashes, sign-out, and
 mixed-DPI display layouts.
 
-**Current release: v0.3.0** — the gallery plus full multi-clock world-clock
+**Current release: v0.3.1** — the gallery plus full multi-clock world-clock
 support: unlimited independent clocks, a searchable offline IANA timezone
 picker, custom labels, and a World Clock Panel with day-change indicators.
+Includes duplicate-process prevention, sleep/resume correction, and
+DPI-aware window icons.
 
 > **Roadmap only** — calendars, alarms, timers, and reminders are planned but
 > not yet implemented. See [docs/ROADMAP.md](docs/ROADMAP.md).

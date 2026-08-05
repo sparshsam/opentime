@@ -34,6 +34,8 @@ mod windows;
 #[cfg(not(windows))]
 mod stub;
 
+pub mod icons;
+
 #[cfg(windows)]
 pub use windows::*;
 

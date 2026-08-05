@@ -36,6 +36,13 @@ pub fn open_manager(app: &AppHandle) -> Result<(), String> {
     .center()
     .build()
     .map_err(|e| format!("create manager: {e}"))?;
+
+    // DPI-correct title-bar/taskbar icon.
+    #[cfg(windows)]
+    if let Ok(hwnd) = win.hwnd() {
+        crate::desktop_layer::icons::restore_window_icon(hwnd.0 as usize);
+    }
+
     let _ = win.show();
     Ok(())
 }

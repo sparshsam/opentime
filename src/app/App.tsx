@@ -11,6 +11,7 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 import { Manager } from "@/manager/Manager";
 import { WidgetSurface } from "@/widgets/WidgetSurface";
 import type { BootContext } from "@/shared/types";
+import { wireResumeHandling } from "@/shared/resume";
 
 function resolveContext(): BootContext {
   // In the Tauri runtime the window label is authoritative. In a pure web
@@ -39,6 +40,8 @@ export function App() {
   const [booted, setBooted] = useState(false);
 
   useEffect(() => {
+    // Correct clocks immediately after the system resumes from sleep.
+    wireResumeHandling();
     // Allow the DOM/theme to settle before rendering clocks.
     setBooted(true);
   }, []);

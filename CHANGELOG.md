@@ -2,6 +2,37 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.1] — 2026-08-05
+
+### Added
+
+- **Duplicate-process prevention** — a second OpenTime launch focuses the
+  existing instance instead of spawning a parallel process.
+- **Sleep/resume correction** — clocks re-read the real clock immediately when
+  the machine wakes (focus / visibilitychange hooks), instead of waiting for
+  the next tick.
+- **DPI-aware window icons** — the title bar and taskbar icons are loaded at
+  the physical pixel size the current display needs (`GetDpiForWindow`), with
+  `ICON_SMALL` + `ICON_SMALL2` + `ICON_BIG` all set. Fixes blurry icons at
+  125–200% scaling. The bundled `icon.ico` now contains all 7 frames
+  (16–256), including the previously-missing 96×96.
+- **Windows build runbook** — `docs/qa/windows-build-runbook.md` with exact
+  commands to install tooling, build the NSIS/MSIX bundles, install, and run
+  the full interactive validation (27 checks) with a results template.
+
+### Changed
+
+- Single-instance plugin wired into the app builder.
+- Widget and manager windows restore a DPI-correct icon at creation.
+
+### Fixed
+
+- `icon.ico` was missing the 96×96 frame (the blur-at-scale root cause);
+  replaced with the full 7-frame set.
+- No functional regressions; 73 frontend + 16 Rust tests pass.
+
+---
+
 ## [0.3.0] — 2026-08-03
 
 ### Added

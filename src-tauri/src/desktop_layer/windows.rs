@@ -85,6 +85,10 @@ pub fn attach_to_desktop(hwnd: usize) -> DesktopLayerResult {
         // First, ensure the window never appears in the taskbar or Alt+Tab.
         apply_desktop_window_styles(hwnd);
 
+        // Apply a DPI-correct title-bar/taskbar icon (16/32 logical px scaled
+        // by GetDpiForWindow). Fixes blurry icons at non-100% scaling.
+        super::icons::restore_window_icon(hwnd as usize);
+
         if let Some(workerw) = find_desktop_workerw() {
             if SetParent(hwnd, workerw) != 0 {
                 // Position at the bottom of the desktop surface's z-order so

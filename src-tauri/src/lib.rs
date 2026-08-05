@@ -168,6 +168,11 @@ fn apply_tray_action_all(app: &AppHandle, action: &str) -> Result<(), String> {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        // Duplicate-process prevention: a second launch focuses the existing
+        // instance's manager instead of spawning a parallel process.
+        .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
+            let _ = window_manager::open_manager(&app);
+        }))
         .setup(|app| {
             ensure_managed_state(app)?;
             ensure_first_run(app.handle())?;
