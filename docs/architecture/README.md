@@ -1,5 +1,8 @@
 # OpenTime Architecture
 
+> Entry point: [docs/Architecture.md](../Architecture.md). This directory holds
+> the detailed write-ups referenced from there.
+
 OpenTime is a Tauri 2 desktop application with two distinct surfaces:
 
 1. **Desktop widgets** — one borderless, transparent webview window per clock,

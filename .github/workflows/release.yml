@@ -1,0 +1,52 @@
+name: Release
+
+# Builds distributable Windows installers and attaches them to a GitHub
+# Release when a tag `v*` is pushed. Runs the full CI first.
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  release:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            src-tauri/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Install npm deps
+        run: npm ci
+
+      - name: Frontend tests
+        run: npx vitest run
+
+      - name: Rust tests (Windows MSVC)
+        run: cargo test --manifest-path src-tauri/Cargo.toml
+
+      - name: Tauri build (NSIS + MSI)
+        run: npm run tauri build -- --bundles nsis,msi
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            src-tauri/target/release/bundle/nsis/*.exe
+            src-tauri/target/release/bundle/msi/*.msi
+          generate_release_notes: true

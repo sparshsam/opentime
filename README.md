@@ -4,33 +4,84 @@
 
 <h1 align="center">OpenTime</h1>
 <p align="center"><strong>Time, kept beautifully.</strong></p>
-<p align="center">A calm, privacy-first desktop time companion. Clocks placed directly on your desktop.</p>
+<p align="center">A calm, privacy-first desktop time companion. Clocks placed directly on your Windows desktop.</p>
 
 <p align="center">
+  <a href="#download">Download</a> ·
   <a href="#features">Features</a> ·
   <a href="#built-with">Built With</a> ·
-  <a href="CHANGELOG.md">Changelog</a> ·
-  <a href="docs/architecture/README.md">Architecture</a>
+  <a href="CHANGELOG.md">Changelog</a>
 </p>
+
+<br>
+
+<!--
+  Hero screenshot. Pending capture from a real Windows desktop after the
+  interactive validation is complete (see docs/qa/validation-results-v0.3.2.md).
+  Drop a 1600×900 capture at assets/hero/hero-dark.png and uncomment below.
+-->
+<!--
+<p align="center">
+  <img src="assets/hero/hero-dark.png" width="900" alt="OpenTime on the Windows desktop" style="border-radius: 12px;">
+</p>
+-->
 
 ---
 
-## About
+## Download
 
-OpenTime places clock widgets directly on your Windows desktop — above the
-wallpaper, below your apps. It is calm, private, and entirely local: no
-account, no telemetry, no cloud dependency, no network requests for core
-functionality. Widgets survive restarts, Explorer crashes, sign-out, and
-mixed-DPI display layouts.
+| Platform | Link |
+|---|---|
+| Windows (NSIS `.exe`) | [OpenTime_0.3.2_x64-setup.exe](releases/windows/OpenTime_0.3.2_x64-setup.exe) |
+| Windows (MSI) | [OpenTime_0.3.2_x64_en-US.msi](releases/windows/OpenTime_0.3.2_x64_en-US.msi) |
+| Source | [GitHub](https://github.com/sparshsam/opentime) |
 
-**Current release: v0.3.2** — the gallery plus full multi-clock world-clock
-support: unlimited independent clocks, a searchable offline IANA timezone
-picker, custom labels, and a World Clock Panel with day-change indicators.
-Includes duplicate-process prevention, sleep/resume correction, and
-DPI-aware window icons.
+> Install, launch, update, and uninstall commands are in [docs/INSTALL.md](docs/INSTALL.md).
 
-> **Roadmap only** — calendars, alarms, timers, and reminders are planned but
-> not yet implemented. See [docs/ROADMAP.md](docs/ROADMAP.md).
+---
+
+## Gallery
+
+<!--
+  Screenshots pending: capture the widget on a real Windows desktop (dark +
+  light) and add them under assets/screenshots/. See
+  docs/qa/windows-manual-validation.md for what to capture.
+-->
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="assets/icons/icon-512.png" width="240" alt="OpenTime app icon"><br>
+      <em>App icon</em>
+    </td>
+    <td align="center">
+      <img src="assets/platforms/windows/app.ico" width="240" alt="OpenTime window icon"><br>
+      <em>Windows icon</em>
+    </td>
+  </tr>
+</table>
+
+*Screenshots of the desktop widget and manager will be added after the manual
+Windows validation. The current gallery shows the bundled icon assets.*
+
+---
+
+## Why This App
+
+Most clocks are either a tiny system-tray afterthought or a full application
+window that competes with your work. OpenTime is neither.
+
+OpenTime places clock widgets *on your desktop itself* — above the wallpaper,
+below your apps — so the time is always visible without ever getting in the
+way. It is built to run all day: quiet, unobtrusive, and entirely local.
+
+- **Own your time.** No account, no telemetry, no cloud. Your clocks and
+  settings live only on your machine.
+- **Calm by design.** Clocks without seconds idle at one wake per minute.
+  Nothing blinks, nothing phones home, nothing nags.
+- **Built to last.** Every clock is configurable, every design is
+  reproducible, and the app keeps running through restarts, Explorer
+  crashes, and mixed-DPI displays.
 
 ---
 
@@ -111,6 +162,7 @@ cargo test --manifest-path src-tauri/Cargo.toml  # Rust unit tests
 - [Persistence schema](docs/DATA.md)
 - [Timezone handling](docs/architecture/timezones.md)
 - [Design system](docs/DESIGN_NOTES.md)
+- [Installation](docs/INSTALL.md)
 - [Release checklist](docs/RELEASE_CHECKLIST.md)
 - [Privacy](PRIVACY.md)
 
@@ -128,6 +180,17 @@ OpenTime is local-first and privacy-first:
 ---
 
 ## Version Journey
+
+### [v0.3.2](CHANGELOG.md) — 2026-08-05
+
+Native Windows build verified: the Windows MSVC release binary and both
+installer packages (NSIS + MSI) build successfully. Windows-only compile
+fixes, config-consistency tests, and a verified installer pipeline.
+
+### [v0.3.1](CHANGELOG.md) — 2026-08-05
+
+Hardening: duplicate-process prevention, sleep/resume correction, and
+DPI-aware window icons (fixes blurry icons at 125–200% scaling).
 
 ### [v0.3.0](CHANGELOG.md) — 2026-08-03
 

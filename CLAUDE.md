@@ -1,10 +1,24 @@
+# Project Standards
+
+This project follows the Kovina ecosystem standards at:
+https://github.com/sparshsam/kovina/tree/main/standards
+
+Required reading before every session:
+- KOVINA_MANIFESTO.md
+- BRAND_GUIDELINES.md
+- DESIGN_PLAYBOOK.md
+- PRODUCT_ARCHITECTURE_PLAYBOOK.md
+
+---
+
 # OpenTime — Agent Notes
 
 > Calm, privacy-first desktop time companion. Clocks, world clocks, and more.
 > **Version:** 0.3.2 — Experimental (tags: v0.1.0, v0.2.0, v0.3.0, v0.3.1, v0.3.2)
+> **Lifecycle:** Experimental (Windows build verified; manual desktop validation pending)
 
 **Brand:** Kovina ecosystem (Open* product family)
-**Repo:** github.com/Kovina/opentime
+**Repo:** github.com/sparshsam/opentime
 
 ## Current Status
 
