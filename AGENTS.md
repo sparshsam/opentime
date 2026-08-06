@@ -36,6 +36,15 @@ timers, and reminders are roadmap-only (schema reserved, not implemented).
 
 ## Where the project stands
 
+- **Live on GitHub:** public repo at `sparshsam/opentime`, `main` + all five
+  tags pushed. CI (`ci.yml`) validates on push/PR (Linux fast checks + Windows
+  MSVC full validation with installer build); `release.yml` builds NSIS/MSI and
+  attaches them to a GitHub Release on `v*` tags.
+- **Kovina-standards compliant** (structure + docs): `SUPPORT.md`, `scripts/`
+  (generate-icons, build, test, lint), `docs/Architecture.md` /
+  `Development.md` / `Deployment.md`, CLAUDE.md `# Project Standards` block,
+  README showroom structure. README's "Part of the Kovina Collection" section
+  links the ecosystem apps to their repos.
 - **Shipped & tagged:** v0.1.0 (foundation) → v0.2.0 (gallery) → v0.3.0 (world
   clocks) → v0.3.1 (hardening) → v0.3.2 (native Windows build verified).
 - **All automated checks green:** 73 frontend tests, 26 Rust tests on Linux,
@@ -46,7 +55,8 @@ timers, and reminders are roadmap-only (schema reserved, not implemented).
   needs a human on a real Windows desktop (taskbar, Alt+Tab, Explorer restart,
   sleep/resume, DPI visuals). The checklist is in
   `docs/qa/validation-results-v0.3.2.md` and
-  `docs/qa/windows-manual-validation.md`.
+  `docs/qa/windows-manual-validation.md`. Screenshots for the README hero and
+  gallery are captured during that pass.
 
 ## Key Files
 
@@ -136,6 +146,19 @@ See `docs/qa/windows-build-runbook.md` for the full procedure and the
   version consistency, `icon.ico` has all 7 frames, installers exist.
 - Built installers are gitignored (`releases/`); document their paths rather
   than committing binaries.
+
+## Pushing to GitHub
+
+- Repo: `sparshsam/opentime` (public). Push `main` and tags after the user
+  approves.
+- **The shell exports an invalid `GITHUB_TOKEN`** that overrides the keyring
+  credential and breaks git/gh auth. Always push with it unset:
+  ```bash
+  env -u GITHUB_TOKEN git push origin main
+  env -u GITHUB_TOKEN git push origin --tags
+  ```
+  (`gh` commands likewise need `env -u GITHUB_TOKEN gh ...`.)
+- After pushing, CI validates on GitHub (Linux + Windows MSVC).
 
 ---
 

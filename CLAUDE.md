@@ -18,12 +18,13 @@ Required reading before every session:
 > **Lifecycle:** Experimental (Windows build verified; manual desktop validation pending)
 
 **Brand:** Kovina ecosystem (Open* product family)
-**Repo:** github.com/sparshsam/opentime
+**Repo:** https://github.com/sparshsam/opentime — **public, live on GitHub**
 
 ## Current Status
 
-**v0.3.2 is the current release.** Three feature releases (foundation, gallery,
-world clocks) plus two hardening releases are complete, committed, and tagged:
+**v0.3.2 is the current release**, pushed to GitHub (main + all tags). Three
+feature releases (foundation, gallery, world clocks) plus two hardening
+releases are complete, committed, and tagged:
 
 - **v0.1.0** — Desktop Clock Foundation (WorkerW desktop layer, tray, startup,
   SQLite, Minimal Digital clock, onboarding)
@@ -36,6 +37,15 @@ world clocks) plus two hardening releases are complete, committed, and tagged:
 
 ### Where the project stands
 
+- **Live on GitHub.** `sparshsam/opentime` is public with `main` + all five
+  tags pushed. CI (`ci.yml`) runs on push/PR: Linux fast checks + Windows MSVC
+  full validation with installer build. A `release.yml` builds NSIS/MSI and
+  attaches them to a GitHub Release on `v*` tags.
+- **Kovina-standards compliant** (structure + docs). Closed in v0.3.2-era
+  commits: `SUPPORT.md`, `scripts/` (generate-icons, build, test, lint),
+  `docs/Architecture.md` / `Development.md` / `Deployment.md`, CLAUDE.md
+  `# Project Standards` block, README showroom structure (hero/gallery pending
+  real screenshots).
 - **Code is production-quality for the shipped scope.** 73 frontend tests + 26
   Rust tests (Linux) / 31 Rust tests (Windows MSVC) pass; typecheck, lint,
   prettier, prod build all green.
