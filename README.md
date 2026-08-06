@@ -223,15 +223,27 @@ AGPL-3.0. See [LICENSE](LICENSE) for details.
 <h2 align="center">Part of the Kovina Collection</h2>
 
 <p align="center">
-  OpenReader · OpenJournal · OpenLedger · OpenTone · OpenPalette · OpenConvert
+  <a href="https://github.com/sparshsam/openreader">OpenReader</a> ·
+  <a href="https://github.com/sparshsam/openjournal">OpenJournal</a> ·
+  <a href="https://github.com/sparshsam/openledger">OpenLedger</a> ·
+  <a href="https://github.com/sparshsam/OpenTone">OpenTone</a> ·
+  <a href="https://github.com/sparshsam/openpalette">OpenPalette</a> ·
+  <a href="https://github.com/sparshsam/OpenConvert">OpenConvert</a>
 </p>
 
 <p align="center">
-  OpenSnap · WorldClock Widget · OpenProof · OpenSend · OpenSprout
+  <a href="https://github.com/sparshsam/opensnap">OpenSnap</a> ·
+  <a href="https://github.com/sparshsam/worldclock-widget">WorldClock Widget</a> ·
+  <a href="https://github.com/sparshsam/openproof">OpenProof</a> ·
+  <a href="https://github.com/sparshsam/opensend">OpenSend</a> ·
+  <a href="https://github.com/sparshsam/opensprout">OpenSprout</a>
 </p>
 
 <p align="center">
-  WordWise · OpenScrabble · Chess by Sparsh · Hisstastic
+  <a href="https://github.com/sparshsam/wordwise">WordWise</a> ·
+  <a href="https://github.com/sparshsam/openscrabble">OpenScrabble</a> ·
+  <a href="https://github.com/sparshsam/chess-by-sparsh">Chess by Sparsh</a> ·
+  <a href="https://github.com/sparshsam/hisstastic">Hisstastic</a>
 </p>
 
 <p align="center">
