@@ -220,7 +220,7 @@ AGPL-3.0. See [LICENSE](LICENSE) for details.
 
 ---
 
-## Part of the Kovina Collection
+<h2 align="center">Part of the Kovina Collection</h2>
 
 <p align="center">
   OpenReader · OpenJournal · OpenLedger · OpenTone · OpenPalette · OpenConvert
