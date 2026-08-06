@@ -222,10 +222,18 @@ AGPL-3.0. See [LICENSE](LICENSE) for details.
 
 ## Part of the Kovina Collection
 
-OpenReader · OpenJournal · OpenLedger · OpenTone · OpenPalette · OpenConvert
+<p align="center">
+  OpenReader · OpenJournal · OpenLedger · OpenTone · OpenPalette · OpenConvert
+</p>
 
-OpenSnap · WorldClock Widget · OpenProof · OpenSend · OpenSprout
+<p align="center">
+  OpenSnap · WorldClock Widget · OpenProof · OpenSend · OpenSprout
+</p>
 
-WordWise · OpenScrabble · Chess by Sparsh · Hisstastic
+<p align="center">
+  WordWise · OpenScrabble · Chess by Sparsh · Hisstastic
+</p>
 
-Minimal, focused tools for everyday tasks.
+<p align="center">
+  Minimal, focused tools for everyday tasks.
+</p>
