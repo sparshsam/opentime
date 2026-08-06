@@ -12,6 +12,9 @@ use crate::display_manager;
 use crate::persistence::db::Database;
 use crate::persistence::models::*;
 use crate::persistence::queries;
+
+#[cfg(test)]
+mod config_tests;
 use crate::startup;
 use crate::window_manager;
 

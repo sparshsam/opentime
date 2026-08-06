@@ -1,18 +1,11 @@
 //! Windows monitor enumeration and position correction.
 
-use std::collections::HashMap;
-use std::ffi::OsString;
-use std::os::windows::ffi::OsStringExt;
-
-use windows_sys::Win32::Foundation::{GetLastError, HWND, LPARAM};
+use windows_sys::Win32::Foundation::{HWND, LPARAM};
 use windows_sys::Win32::Graphics::Gdi::{
-    EnumDisplayMonitors, GetMonitorInfoW, MonitorFromPoint, HDC, HMONITOR, MONITORINFO,
-    MONITORINFOF_PRIMARY, MONITOR_DEFAULTTONEAREST,
+    EnumDisplayMonitors, GetMonitorInfoW, HDC, HMONITOR, MONITORINFO,
 };
 use windows_sys::Win32::UI::HiDpi::{GetDpiForMonitor, MDT_EFFECTIVE_DPI};
-use windows_sys::Win32::UI::WindowsAndMessaging::{
-    GetWindowRect, IsWindow, USER_DEFAULT_SCREEN_DPI,
-};
+use windows_sys::Win32::UI::WindowsAndMessaging::{GetWindowRect, IsWindow, MONITORINFOF_PRIMARY};
 
 use crate::persistence::models::MonitorInfo;
 
@@ -53,13 +46,10 @@ fn monitor_from_hmonitor(hmon: HMONITOR) -> Option<MonitorInfo> {
     }
 }
 
-fn monitor_name(hmon: HMONITOR) -> String {
-    unsafe {
-        // Query the display device name via EnumDisplayDevices matching the
-        // monitor's device name is involved; a readable fallback is fine.
-        let _ = hmon;
-        "Display".to_string()
-    }
+fn monitor_name(_hmon: HMONITOR) -> String {
+    // Querying the display device name via EnumDisplayDevices is involved;
+    // a readable fallback is fine for the widget list.
+    "Display".to_string()
 }
 
 /// Enumerate all connected monitors.

@@ -1,6 +1,6 @@
 //! Windows desktop-layer implementation (WorkerW reparent + HWND_BOTTOM fallback).
 
-use windows_sys::Win32::Foundation::{HWND, LPARAM, LRESULT, RECT, S_OK, WPARAM};
+use windows_sys::Win32::Foundation::{HWND, LPARAM, WPARAM};
 use windows_sys::Win32::UI::WindowsAndMessaging::{
     EnumWindows, FindWindowW, GetClassNameW, GetParent, GetWindowLongPtrW, GetWindowLongW,
     IsWindow, SendMessageTimeoutW, SetParent, SetWindowLongPtrW, SetWindowLongW, SetWindowPos,
@@ -29,7 +29,8 @@ pub enum DesktopLayerResult {
 /// 3. Enumerate top-level windows; the WorkerW whose parent is NOT Progman is
 ///    the wallpaper surface. The Progman window itself hosts the desktop icons.
 unsafe fn find_desktop_workerw() -> Option<HWND> {
-    let progman = FindWindowW(&[PROGMAN_CLASS.as_ptr().cast(), 0], std::ptr::null());
+    // FindWindowW takes PCWSTR (a single *const u16), not a slice.
+    let progman = FindWindowW(PROGMAN_CLASS.as_ptr().cast(), std::ptr::null());
     if progman.is_null() {
         return None;
     }
@@ -39,8 +40,8 @@ unsafe fn find_desktop_workerw() -> Option<HWND> {
     let _ = SendMessageTimeoutW(
         progman,
         WM_SPAWN_WORKERW,
-        WPARAM(0xD as usize),
-        LPARAM(0x1 as isize),
+        0xD as WPARAM, // WM_SPAWN_WORKERW wParam
+        0x1 as LPARAM, // WM_SPAWN_WORKERW lParam
         SMTO_ABORTIFHUNG,
         1000,
         &mut result,
@@ -76,9 +77,9 @@ unsafe extern "system" fn enum_workerw_proc(hwnd: HWND, lparam: LPARAM) -> i32 {
 
 /// Attach a widget window into the desktop layer.
 pub fn attach_to_desktop(hwnd: usize) -> DesktopLayerResult {
-    let hwnd = hwnd as HWND;
+    let h = hwnd as HWND;
     unsafe {
-        if !IsWindow(hwnd) {
+        if IsWindow(h) == 0 {
             return DesktopLayerResult::NotSupported;
         }
 
@@ -87,14 +88,14 @@ pub fn attach_to_desktop(hwnd: usize) -> DesktopLayerResult {
 
         // Apply a DPI-correct title-bar/taskbar icon (16/32 logical px scaled
         // by GetDpiForWindow). Fixes blurry icons at non-100% scaling.
-        super::icons::restore_window_icon(hwnd as usize);
+        super::icons::restore_window_icon(hwnd);
 
         if let Some(workerw) = find_desktop_workerw() {
-            if SetParent(hwnd, workerw) != 0 {
+            if !SetParent(h, workerw).is_null() {
                 // Position at the bottom of the desktop surface's z-order so
                 // desktop icons (children of Progman, above WorkerW) stay on top.
                 let _ = SetWindowPos(
-                    hwnd,
+                    h,
                     HWND_BOTTOM,
                     0,
                     0,
@@ -109,7 +110,7 @@ pub fn attach_to_desktop(hwnd: usize) -> DesktopLayerResult {
         // Fallback: no WorkerW available. Keep it a bottom-most top-level
         // tool window (never taskbar/Alt+Tab, never activating).
         let _ = SetWindowPos(
-            hwnd,
+            h,
             HWND_BOTTOM,
             0,
             0,
@@ -123,25 +124,25 @@ pub fn attach_to_desktop(hwnd: usize) -> DesktopLayerResult {
 
 /// Detach a widget window from the desktop layer (called before destruction).
 pub fn detach_from_desktop(hwnd: usize) {
-    let hwnd = hwnd as HWND;
+    let h = hwnd as HWND;
     unsafe {
-        if IsWindow(hwnd) {
-            let _ = SetParent(hwnd, std::ptr::null_mut());
+        if IsWindow(h) != 0 {
+            let _ = SetParent(h, std::ptr::null_mut());
         }
     }
 }
 
 /// True when the widget's parent (the WorkerW) is still a valid window.
 pub fn is_attached_valid(hwnd: usize) -> bool {
-    let hwnd = hwnd as HWND;
+    let h = hwnd as HWND;
     unsafe {
-        if !IsWindow(hwnd) {
+        if IsWindow(h) == 0 {
             return false;
         }
-        let parent = GetParent(hwnd);
+        let parent = GetParent(h);
         if parent.is_null() {
             // Fallback mode: window exists, that's the definition of valid.
-            return IsWindow(hwnd) != 0;
+            return true;
         }
         IsWindow(parent) != 0
     }
@@ -150,13 +151,13 @@ pub fn is_attached_valid(hwnd: usize) -> bool {
 /// Re-run the attach routine — used by the shell watcher after Explorer
 /// restarts and the WorkerW is recreated.
 pub fn reattach(hwnd: usize) -> DesktopLayerResult {
-    let hwnd = hwnd as HWND;
+    let h = hwnd as HWND;
     unsafe {
-        if !IsWindow(hwnd) {
+        if IsWindow(h) == 0 {
             return DesktopLayerResult::NotSupported;
         }
         // Detach from any stale parent first.
-        let _ = SetParent(hwnd, std::ptr::null_mut());
+        let _ = SetParent(h, std::ptr::null_mut());
     }
     attach_to_desktop(hwnd)
 }
@@ -164,27 +165,28 @@ pub fn reattach(hwnd: usize) -> DesktopLayerResult {
 /// Apply tool-window / no-activate / transparent styling so the widget never
 /// appears in the taskbar, Alt+Tab, or steals focus.
 pub fn apply_desktop_window_styles(hwnd: usize) {
-    let hwnd = hwnd as HWND;
+    let h = hwnd as HWND;
     unsafe {
-        let ex = GetWindowLongW(hwnd, GWL_EXSTYLE) as u32;
+        let ex = GetWindowLongW(h, GWL_EXSTYLE) as u32;
         let new_ex =
             ex | WS_EX_TOOLWINDOW as u32 | WS_EX_NOACTIVATE as u32 | WS_EX_TRANSPARENT as u32;
-        let _ = SetWindowLongW(hwnd, GWL_EXSTYLE, new_ex as i32);
+        let _ = SetWindowLongW(h, GWL_EXSTYLE, new_ex as i32);
 
-        let style = GetWindowLongW(hwnd, GWL_STYLE) as u32;
+        let style = GetWindowLongW(h, GWL_STYLE) as u32;
         if style & WS_POPUP as u32 == 0 {
-            let _ = SetWindowLongW(hwnd, GWL_STYLE, (style | WS_POPUP as u32) as i32);
+            let _ = SetWindowLongW(h, GWL_STYLE, (style | WS_POPUP as u32) as i32);
         }
     }
 }
 
 /// Ensure the window is not above normal windows (clear WS_EX_TOPMOST).
 pub fn clear_topmost(hwnd: usize) {
-    let hwnd = hwnd as HWND;
+    let h = hwnd as HWND;
     unsafe {
-        let ex = GetWindowLongPtrW(hwnd, GWL_EXSTYLE) as usize;
+        let ex = GetWindowLongPtrW(h, GWL_EXSTYLE) as usize;
         if ex & WS_EX_TOPMOST as usize != 0 {
-            let _ = SetWindowLongPtrW(hwnd, GWL_EXSTYLE, (ex & !(WS_EX_TOPMOST as usize)) as isize);
+            let _ =
+                SetWindowLongPtrW(h, GWL_EXSTYLE, (ex & !(WS_EX_TOPMOST as usize)) as isize);
         }
     }
 }
@@ -194,15 +196,8 @@ mod tests {
     use super::*;
 
     #[test]
-    fn find_workerw_does_not_crash_on_any_system() {
-        // On headless CI (no Explorer) this returns None; on a real Windows
-        // session it returns the wallpaper surface. We only assert it doesn't
-        // panic and that attach on an invalid hwnd reports NotSupported.
-        unsafe {
-            let result = attach_to_desktop(0);
-            // 0 is never a valid window, so must be NotSupported (or the
-            // fallback path if a window check passes — it won't).
-            assert!(result == DesktopLayerResult::NotSupported);
-        }
+    fn attach_invalid_hwnd_is_not_supported() {
+        // 0 is never a valid window; must report NotSupported, not panic.
+        assert_eq!(attach_to_desktop(0), DesktopLayerResult::NotSupported);
     }
 }

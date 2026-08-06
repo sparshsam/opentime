@@ -2,6 +2,44 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.2] — 2026-08-05
+
+### Added
+
+- **Native Windows build verified end-to-end.** The Windows MSVC release
+  binary and both installer packages (NSIS `.exe` and WiX `.msi`) now build
+  successfully. This surfaced and fixed real Windows-only compile errors that
+  the Linux build could not see.
+- **Windows installer configuration.** NSIS installs per-user with an English
+  language selector; the WiX MSI uses `en-US`. Bundle targets are `nsis` and
+  `msi`.
+- **Configuration-consistency tests.** New Rust tests verify `tauri.conf.json`
+  version matches `Cargo.toml`, the package identifier
+  (`org.kovina.opentime`), product name (`OpenTime`), bundle targets, per-user
+  install mode, referenced icons exist, MSIX tile assets exist (Light + Dark),
+  and `icon.ico` contains all 7 frames (16–256).
+- **Startup registry tests.** Verify the HKCU Run key path/value and the
+  quoted executable command.
+- **File-backed database tests.** Verify WAL journal mode, foreign keys, and
+  that reopening an existing database preserves the schema version.
+- **User installation guide** — `docs/INSTALL.md` with exact install, launch,
+  update, and uninstall commands for both the NSIS and MSI packages.
+
+### Changed
+
+- Fixed Windows-only API usage in `desktop_layer`, `display_manager`, and
+  `startup` for `windows-sys 0.59` (WPARAM/LPARAM aliases, `FindWindowW`
+  signature, `IsWindow` returning `BOOL`, `MONITORINFOF_PRIMARY` module, and
+  the `Win32_System_Registry` feature).
+- Bundled `icon.ico` rebuilt with all 7 frames.
+
+### Fixed
+
+- Windows MSVC compile errors in the desktop-layer and display-manager code.
+- Removed an unnecessary `unsafe` block.
+
+---
+
 ## [0.3.1] — 2026-08-05
 
 ### Added

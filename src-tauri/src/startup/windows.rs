@@ -6,8 +6,8 @@ use std::ptr;
 
 use windows_sys::Win32::Foundation::ERROR_SUCCESS;
 use windows_sys::Win32::System::Registry::{
-    RegCloseKey, RegDeleteValueW, RegGetValueW, RegOpenKeyExW, RegQueryValueExW, RegSetValueExW,
-    HKEY, HKEY_CURRENT_USER, KEY_QUERY_VALUE, KEY_SET_VALUE, REG_SZ, RRF_RT_REG_SZ,
+    RegCloseKey, RegDeleteValueW, RegOpenKeyExW, RegQueryValueExW, RegSetValueExW, HKEY,
+    HKEY_CURRENT_USER, KEY_QUERY_VALUE, KEY_SET_VALUE, REG_SZ,
 };
 
 const RUN_KEY: &str = "Software\\Microsoft\\Windows\\CurrentVersion\\Run";
@@ -59,6 +59,36 @@ pub fn is_startup_enabled() -> bool {
         );
         let _ = RegCloseKey(key);
         qr == ERROR_SUCCESS && kind == REG_SZ
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn run_key_and_value_are_correct() {
+        // The exact HKCU Run key and value name the app registers under.
+        assert_eq!(RUN_KEY, "Software\\Microsoft\\Windows\\CurrentVersion\\Run");
+        assert_eq!(VALUE_NAME, "OpenTime");
+    }
+
+    #[test]
+    fn startup_command_is_quoted_executable_path() {
+        let cmd = startup_command();
+        // Must start and end with quotes around an exe path.
+        assert!(cmd.starts_with('"'), "expected quoted path, got {cmd}");
+        assert!(cmd.ends_with('"'), "expected quoted path, got {cmd}");
+        assert!(cmd.to_lowercase().contains("opentime"), "got {cmd}");
+    }
+
+    #[test]
+    fn wide_encodes_utf16_with_nul_terminator() {
+        let w = wide("Run");
+        assert_eq!(w[0], 'R' as u16);
+        assert_eq!(w[1], 'u' as u16);
+        assert_eq!(w[2], 'n' as u16);
+        assert_eq!(w[3], 0); // nul terminator
     }
 }
 

@@ -27,6 +27,9 @@ dist/
 build/
 out/
 
+# Binary release artifacts (built on Windows, not committed)
+releases/
+
 # Logs
 *.log
 npm-debug.log*

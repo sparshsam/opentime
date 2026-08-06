@@ -1,16 +1,39 @@
 # Windows Build & Validation Runbook
 
 > **Who runs this:** a human on a Windows 10/11 machine.
-> **Why:** the MSIX/NSIS bundle and the interactive desktop-layer behaviour
-> (taskbar, tray, Alt+Tab, Explorer restart, sleep/resume) cannot be produced
-> or exercised from the WSL development host. This document gives the exact
-> commands and a results template.
+> **Why:** the interactive desktop-layer behaviour (taskbar, tray, Alt+Tab,
+> Explorer restart, sleep/resume) cannot be exercised from the WSL development
+> host. The **build side is verified**: on 2026-08-05 the Windows MSVC release
+> binary and both the NSIS and MSI installers were produced successfully via
+> WSL interop. This document records the exact commands and the remaining
+> interactive validation with a results template.
+
+---
+
+## Build status (verified 2026-08-05)
+
+The following were confirmed working via WSL interoperability:
+
+- Windows Rust MSVC toolchain (rustc 1.96.0, cargo 1.96.0)
+- Visual Studio 2022 Build Tools (MSVC 14.44) + Windows SDK
+- WebView2 runtime
+- Tauri CLI 2.11.4 on Windows
+- NSIS and WiX (auto-downloaded by the Tauri bundler)
+- `npm run tauri build -- --bundles nsis,msi` → both installers
+
+Both installer outputs:
+
+```
+src-tauri\target\release\bundle\nsis\OpenTime_0.3.2_x64-setup.exe
+src-tauri\target\release\bundle\msi\OpenTime_0.3.2_x64_en-US.msi
+```
 
 ---
 
 ## Part A — Prerequisites (one-time)
 
-Run these in **PowerShell (Administrator)** on the Windows machine.
+Run these in **PowerShell (Administrator)** on the Windows machine
+**(only if building on a fresh machine; already present on this host).**
 
 ```powershell
 # 1. Rust + MSVC toolchain (if not already present)
@@ -79,8 +102,8 @@ Expected outputs:
 
 ```
 src-tauri\target\release\opentime.exe
-src-tauri\target\release\bundle\nsis\OpenTime_0.3.0_x64-setup.exe
-src-tauri\target\release\bundle\msi\OpenTime_0.3.0_x64_en-US.msi
+src-tauri\target\release\bundle\nsis\OpenTime_0.3.2_x64-setup.exe
+src-tauri\target\release\bundle\msi\OpenTime_0.3.2_x64_en-US.msi
 ```
 
 ### If MSIX fails
@@ -98,10 +121,10 @@ For a local unsigned test build, either:
 
 ```powershell
 # NSIS silent install (per-user, no admin):
-Start-Process .\src-tauri\target\release\bundle\nsis\OpenTime_0.3.0_x64-setup.exe -ArgumentList "/S" -Wait
+Start-Process .\src-tauri\target\release\bundle\nsis\OpenTime_0.3.2_x64-setup.exe -ArgumentList "/S" -Wait
 
 # MSIX (unsigned local test — requires developer mode or a signing cert):
-Add-AppxPackage -Path .\src-tauri\target\release\bundle\msi\OpenTime_0.3.0_x64_en-US.msi
+Add-AppxPackage -Path .\src-tauri\target\release\bundle\msi\OpenTime_0.3.2_x64_en-US.msi
 ```
 
 Verify installation:
@@ -119,7 +142,7 @@ Test-Path "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Kovina"
 # Version, product name, publisher
 (Get-Item "$env:LOCALAPPDATA\Kovina\OpenTime\OpenTime.exe").VersionInfo |
   Select-Object ProductName, ProductVersion, CompanyName
-# Expected: OpenTime, 0.3.0, Kovina
+# Expected: OpenTime, 0.3.2, Kovina
 ```
 
 ### Startup registry entry
@@ -192,7 +215,7 @@ Failures (numbers + what happened): ____________
 ## Part F — Report back
 
 Copy the results template and paste it back into this session, or save it to
-`docs/qa/validation-results-v0.3.0.md`. I'll update `docs/qa/windows-manual-validation.md`
+`docs/qa/validation-results-v0.3.2.md`. I'll update `docs/qa/windows-manual-validation.md`
 with the results and commit the hardening release.
 
 ---

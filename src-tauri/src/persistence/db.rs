@@ -79,6 +79,50 @@ mod tests {
     }
 
     #[test]
+    fn file_db_uses_wal_and_foreign_keys() {
+        // A real file-backed database (as created at app-data path) must set
+        // WAL journal mode and enforce foreign keys.
+        let dir = std::env::temp_dir().join(format!("opentime-db-test-{}", uuid::Uuid::new_v4()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let path = dir.join("opentime.sqlite");
+        let db = Database::open(&path).unwrap();
+        assert_eq!(db.schema_version().unwrap(), latest_version());
+
+        let conn = db.conn.lock().unwrap();
+        let journal: String = conn
+            .query_row("PRAGMA journal_mode", [], |r| r.get(0))
+            .unwrap();
+        assert_eq!(journal.to_lowercase(), "wal");
+        let fk: i64 = conn
+            .query_row("PRAGMA foreign_keys", [], |r| r.get(0))
+            .unwrap();
+        assert_eq!(fk, 1);
+        drop(conn);
+
+        // Cleanup the temp database.
+        drop(db);
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn reopening_existing_db_preserves_version() {
+        // Reopening an already-migrated file must not re-run migrations or
+        // change the version.
+        let dir = std::env::temp_dir().join(format!("opentime-db-test-{}", uuid::Uuid::new_v4()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let path = dir.join("opentime.sqlite");
+        {
+            let db = Database::open(&path).unwrap();
+            assert_eq!(db.schema_version().unwrap(), latest_version());
+        }
+        {
+            let db = Database::open(&path).unwrap();
+            assert_eq!(db.schema_version().unwrap(), latest_version());
+        }
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    #[test]
     fn settings_row_exists_after_migration() {
         let db = Database::open_in_memory().unwrap();
         let conn = db.conn.lock().unwrap();
