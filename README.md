@@ -217,3 +217,15 @@ onboarding, and Explorer-restart recovery.
 ## License
 
 AGPL-3.0. See [LICENSE](LICENSE) for details.
+
+---
+
+## Part of the Kovina Collection
+
+OpenReader · OpenJournal · OpenLedger · OpenTone · OpenPalette · OpenConvert
+
+OpenSnap · WorldClock Widget · OpenProof · OpenSend · OpenSprout
+
+WordWise · OpenScrabble · Chess by Sparsh · Hisstastic
+
+Minimal, focused tools for everyday tasks.
